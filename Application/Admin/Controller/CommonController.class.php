@@ -1,6 +1,7 @@
 <?php
 namespace Admin\Controller;
 use Think\Controller;
+use Think\Exception;
 /**
  * use Common\Model 这块可以不需要使用，框架默认会加载里面的内容
  */
@@ -45,7 +46,31 @@ class CommonController extends Controller {
 
 		return false;
 	}
+    
+    // public function setStatus($data,$models){
+    //     try {
 
+    //     	if($_POST){
+	   //          $id = $data['id'];
+	   //          $status =$data['status'];
+	   //          if (!$id) {
+	   //                 return show(0,'ID不存在');# code...
+	   //          }
+	   //          $ret = D($models)->updateStatusById($id,$status);
+	   //          if ($ret) {
+	   //              return show(1,'操作成功');
+	   //              # code...
+	   //          }else{
+	   //              return show(0,'操作失败');
+	   //          }
+    //     	}
+    //         return show(0,'没有提交');
+    //     } catch (Exception $e) {
+    //         return show(0,$e->getMessage());
+            
+    //     }
+      
+    // }
 	
 
 }

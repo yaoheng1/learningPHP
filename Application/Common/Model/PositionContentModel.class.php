@@ -12,6 +12,9 @@ class PositionContentModel extends Model{
 			return 0;
 			# code...
 		}
+		if(!$data['create_time']){
+		$data['create_time'] = time();
+	    }
 		return $this->_db->add($data);
 
 	}
@@ -27,4 +30,28 @@ class PositionContentModel extends Model{
 		$list = $this->_db->select();
 		return $list;
 	}
+	public function find($id){
+		$data = $this->_db->where('id='.$id)->find();
+		return $data;
+	}
+	public function updateStatusById($id,$status){
+		if (!is_numeric($status)) {
+			throw_exception("status不能为非数字");
+		}
+		if(!$id || !is_numeric($id)){
+			throw_exception("ID不合法");
+		}
+		$data['status'] = $status;
+		return $this->_db->where('id='.$id)->save($data);
+    }
+    public function updateById($id,$data){
+    	if(!$id || !is_numeric($id)){
+    		throw_exception('ID不合法');
+    	}
+    	if (!$data || !is_array($data)) {
+    		throw_exception('更新数据不合法');
+    		# code...
+    	}
+    	return $this->_db->where('id='.$id)->save($data);
+    }
 }

@@ -9,7 +9,7 @@ namespace Admin\Controller;
 use Think\Controller;
 use Think\Exception;
 
-class MenuController extends Controller {
+class MenuController extends CommonController {
 
     public function index(){
         $data =array();
