@@ -79,7 +79,7 @@
               <div class="col-sm-5">
                 <select class="form-control" name="copyform">
                   <foreach name="copyFrom" item="cf">
-                      <option value="{$key}" >{$cf}</option>
+                      <option value="{$key}"  <if condition="$key eq $news['copyform']">selected='selected'</if>>{$cf}</option>
                      
                     </foreach>
                 </select>
@@ -104,7 +104,7 @@
                 <input value="{$news.keywords}"type="text" class="form-control" name="keywords" id="inputPassword3" placeholder="请填写关键词">
               </div>
             </div>
-
+            <input type="hidden" name="news_id" value="{$news.news_id}"/>
 
             <div class="form-group">
               <div class="col-sm-offset-2 col-sm-10">

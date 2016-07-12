@@ -153,7 +153,7 @@
               <label for="inputname" class="col-sm-2 control-label">来源:</label>
               <div class="col-sm-5">
                 <select class="form-control" name="copyform">
-                  <?php if(is_array($copyFrom)): foreach($copyFrom as $key=>$cf): ?><option value="<?php echo ($key); ?>" ><?php echo ($cf); ?></option><?php endforeach; endif; ?>
+                  <?php if(is_array($copyFrom)): foreach($copyFrom as $key=>$cf): ?><option value="<?php echo ($key); ?>"  <?php if($key == $news['copyform']): ?>selected='selected'<?php endif; ?>><?php echo ($cf); ?></option><?php endforeach; endif; ?>
                 </select>
               </div>
             </div>
@@ -176,7 +176,7 @@
                 <input value="<?php echo ($news["keywords"]); ?>"type="text" class="form-control" name="keywords" id="inputPassword3" placeholder="请填写关键词">
               </div>
             </div>
-
+            <input type="hidden" name="news_id" value="<?php echo ($news["news_id"]); ?>"/>
 
             <div class="form-group">
               <div class="col-sm-offset-2 col-sm-10">

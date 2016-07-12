@@ -78,12 +78,12 @@ function todelete(url,data){
     }
     , "JSON");
 }
-
+//排序
 $('#button-listorder').click(function () {
     //获取listorder内容
     var data =$('#singcms-listorder').serializeArray();
     postData ={};
-    $(data).each(function () {
+    $(data).each(function (i) {
         postData[this.name] = this.value;
 
     });
@@ -98,4 +98,60 @@ $('#button-listorder').click(function () {
         }
     },"JSON");
 
+});
+
+//更改状态
+$('.singcms-table #singcms-on-off').on('click',function(){
+    var id = $(this).attr('attr-id');
+    var status = $(this).attr('attr-status');
+    var url =SCOPE.set_status_url;
+
+
+    data={};
+    data['id'] = id;
+    data['status'] = status;
+    console.log(data);
+
+    layer.open({
+        type:0,
+        title :'是否提交？',
+        btn:['yes','no'],
+        icon:3,
+        closeBtn:2,
+        content:"是否确认更改状态",
+        scrollbar:true,
+        yes:function(){
+            todelete(url,data);
+        },
+
+
+    });
+});
+/**
+ * 推送
+ */
+$("#singcms-push").click(function(){
+    var id = $("#select-push").val();
+    if(id == 0){
+        return dialog.error("请选择推荐位");
+    }
+    push = {};
+    postData = {};
+    $("input[name='pushcheck']:checked").each(function(i){
+        push[i] = $(this).val();
+
+    });
+    postData['push'] = push;
+    postData['position_id'] = id;
+    // console.log(postData);
+    var url = SCOPE.push_url;
+    $.post(url,postData,function(result){
+         if(result.status == 1){
+            return dialog.success(result.message,result['data']['jump_url']);
+         }
+         if(result.status == 0){
+             return dialog.error(result.message);
+
+         }
+    },"JSON");
 });

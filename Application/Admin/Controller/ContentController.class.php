@@ -19,14 +19,19 @@ class ContentController extends CommonController {
     	}
         $conds['status'] = array('neq',-1);
     	$page =$_REQUEST['p'] ? $_REQUEST['p']:1;
-        $pageSize =$_REQUEST['pageSize'] ? $_REQUEST['pageSize']:1;
+        $pageSize =$_REQUEST['pageSize'] ? $_REQUEST['pageSize']:3;
         $news = D("News")->getNews($conds,$page,$pageSize);
         $newsCount = D("News")->getNewsCount($conds);
         //think自带分页
+        
+        $positions = D('Position')->getNormalPosition();
+
         $res = new \Think\Page($newsCount,$pageSize);
         $pageRes =$res->show();
 		$this->assign('pageres',$pageRes);
 		$this->assign('news',$news);
+
+        $this->assign('positions',$positions);
 
 
         $this->assign('webSiteMenu',D('Menu')->getBarMenus());
@@ -55,6 +60,11 @@ class ContentController extends CommonController {
     			return show(0,'content不存在');
     			# code...
     		}
+            //update
+            if ($_POST['news_id']) {
+                return $this->save($_POST);
+                # code...
+            }
 
     		$newsId = D('News')->insert($_POST);
     		if($newsId){
@@ -104,4 +114,100 @@ class ContentController extends CommonController {
 
 		$this->display();
 	}
+    public function save($data){
+        $newsId = $data['news_id'];
+        unset($data['news_id']);
+        try{
+        $id = D('News')->updateById($newsId,$data);
+        $newsContentData['content'] = $data['content'];
+        $condId = D('NewsContent')->updateNewsById($newsId,$newsContentData);
+        if ($id === false || $condId === false) {
+            return show(0,'更新失败');
+            # code...
+        }
+        return show(1,'更新成功');
+        }catch(Exception $e){
+        return show(0,$e->getMessage());
+        }
+    }
+    public function setStatus(){
+        try {
+
+            if($_POST){
+            $id = $_POST['id'];
+            $status =$_POST['status'];
+            if (!$id) {
+                   return show(0,'ID不存在');# code...
+            }
+            $ret =D('News')->updateStatusById($id,$status);
+            if ($ret) {
+                return show(1,'操作成功');
+                # code...
+            }else{
+                return show(0,'操作失败');
+            }
+        }
+            
+        } catch (Exception $e) {
+            return show(0,$e->getMessage());
+            
+        }
+        return show(0,'没有提交');
+    }
+    public function listorder(){
+        $listorder = $_POST['listorder'];
+        $jumpUrl = $_SERVER['HTTP_REFERER'];
+        $errors = array();
+        if ($listorder){
+            try{
+            foreach ($listorder as $menuId=>$v){
+                //执行更新
+                $id = D('News')->updateListorderById($menuId,$v);
+                if($id === false){
+                    $errors[] = $menuId;
+                }
+            }
+                }catch (Exception $e){
+                return show(0,$e->getMessage(),array('jump_url'=>$jumpUrl));
+
+            }
+            if($errors){
+                return show(0,'排序失败-'.implode($errors),array('jump_url'=>$jumpUrl));
+            }
+            return show(1,'排序成功',array('jump_url'=>$jumpUrl));
+
+        }
+        return show(0,'排序数据失败',array('jump_url'=>$jumpUrl));
+    }
+    public function push()
+    {
+        $jumpUrl =$_SERVER['HTTP_REFERER'];
+        $positionId = intval($_POST['position_id']);
+        $newsId = $_POST['push'];
+
+        if(!$newsId || !is_array($newsId)){
+            return show(0,'请选择推荐的文章ID进行推荐');
+        }
+        try{
+                $news = D('News')->getNewsByNewsIdIn($newsId);
+                if(!$news){
+                    return show(0,'没有内容');
+                }
+                foreach ($news as $new ) {
+                    $data = array(
+                        'position_id' =>$positionId , 
+                        'title' => $new['title'],
+                        'thumb' => $new['thumb'],
+                        'news_id' => $new['news_id'],
+                        'status' => 1,
+                        'create_time' => $new['create_time'],
+                        );
+                    $position = D('PositionContent')->insert($data);
+                    
+                }
+            }catch(Exception $e){
+                return show(0,$e->getMessage());
+            }
+            return show(1,'推荐成功',array('jump_url'=>$jumpUrl));
+    }
 }

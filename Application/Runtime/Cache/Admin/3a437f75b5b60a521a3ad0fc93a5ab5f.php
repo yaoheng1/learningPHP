@@ -96,16 +96,16 @@
 
                 <ol class="breadcrumb">
                     <li>
-                        <i class="fa fa-dashboard"></i>  <a href="/admin.php?c=menu">菜单管理</a>
+                        <i class="fa fa-dashboard"></i>  <a href="/admin.php?c=menu">推荐位管理</a>
                     </li>
                     <li class="active">
-                        <i class="fa fa-table"></i>菜单列表
+                        <i class="fa fa-table"></i>推荐位列表
                     </li>
                 </ol>
             </div>
         </div>
         <!-- /.row -->
-        <div class="row">
+<!--         <div class="row">
             <form action="/admin.php" method="get">
 
                 <div class="input-group">
@@ -125,7 +125,7 @@
                 </span>
 
             </form>
-        </div>
+        </div> -->
         <div>
           <button  id="button-add" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>添加 </botton>
         </div>
@@ -140,22 +140,22 @@
                         <tr>
                             <th width="14">排序</th>
                             <th>id</th>
-                            <th>菜单名</th>
-                            <th>模块名</th>
-                            <th>类型</th>
+                            <th>名称</th>
                             <th>状态</th>
+                            <th>描述</th>
+                            <th>创建时间</th>
                             <th>操作</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <?php if(is_array($menus)): $i = 0; $__LIST__ = $menus;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$menu): $mod = ($i % 2 );++$i;?><tr>
+                        <?php if(is_array($positions)): $i = 0; $__LIST__ = $positions;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$position): $mod = ($i % 2 );++$i;?><tr>
                                 <td><input size="4" type="text" name="listorder[<?php echo ($menu["menu_id"]); ?>]" value="<?php echo ($menu["listorder"]); ?>"/></td>
-                                <td><?php echo ($menu["menu_id"]); ?></td>
-                                <td><?php echo ($menu["name"]); ?></td>
-                                <td><?php echo ($menu["m"]); ?></td>
-                                <td><?php echo (getMenuType($menu["type"])); ?></td>
-                                <td><?php echo (status($menu["status"])); ?></td>
-                                <td><span class="glyphicon glyphicon-edit" aria-hidden="true" id="singcms-edit" attr-id="<?php echo ($menu["menu_id"]); ?>"></span>    <a href="javascript:void(0)" attr-id="<?php echo ($menu["menu_id"]); ?>" id="singcms-delete"  attr-a="menu" attr-message="删除"><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span></a></td>
+                                <td><?php echo ($position["id"]); ?></td>
+                                <td><?php echo ($position["name"]); ?></td>
+                                <td><?php echo (status($position["status"])); ?></td>
+                                <td><?php echo ($position["description"]); ?></td>
+                                <td><?php echo (date("Y-m-d H:i",$position["create_time"])); ?></td>
+                                <td><span class="glyphicon glyphicon-edit" aria-hidden="true" id="singcms-edit" attr-id="<?php echo ($position["id"]); ?>"></span>    <a href="javascript:void(0)" attr-id="<?php echo ($position["id"]); ?>" id="singcms-delete"  attr-a="menu" attr-message="删除"><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span></a></td>
                             </tr><?php endforeach; endif; else: echo "" ;endif; ?>
 
                         </tbody>
@@ -166,9 +166,9 @@
                             <?php echo ($pageRes); ?>
                         </ul>
                     </nav>
-                    <div>
+                    <!-- <div>
                         <button  id="button-listorder" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>更新排序 </botton>
-                    </div>
+                    </div> -->
                     </form>
                     
                 </div>
@@ -191,8 +191,8 @@
 <script>
 
     var SCOPE = {
-        'add_url' : '/admin.php?c=menu&a=add',
-        'edit_url' : '/admin.php?c=menu&a=edit',
+        'add_url' : '/admin.php?c=position&a=add',
+        'edit_url' : '/admin.php?c=position&a=edit',
         'set_status_url' : '/admin.php?c=menu&a=setStatus',
         'listorder_url' : '/admin.php?c=menu&a=listorder',
 
